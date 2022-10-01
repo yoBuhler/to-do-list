@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {v4 as uuidv4} from 'uuid';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCheck, faTrash, faArrowRotateRight } from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faTrash, faArrowRotateRight, faPlus } from "@fortawesome/free-solid-svg-icons"
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -67,7 +67,7 @@ function App() {
   return (
     <div className="mt-3 mb-3 min-vh-75 align-items-center">
       <div className="row mb-3">
-        <h1>
+        <h1 className="text-center">
           Johan's to do list
         </h1>
       </div>
@@ -79,7 +79,7 @@ function App() {
               <label for="newText">Task description</label>
             </div>
             <button className="btn btn-primary" onClick={() => handleAddTask()}>
-              Add Task
+              <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
         </div>
@@ -97,8 +97,17 @@ function App() {
       <ul className="w-75 ms-auto me-auto list-group">
         {
           tasks.filter(filterTasks).sort(sortTasks).map(task => (
-            <li className="list-group-item d-flex align-items-center" key={task.id}>
-              <span>
+            <li 
+              className={
+                "list-group-item d-flex align-items-center"
+              }
+              key={task.id}
+            >
+              <span
+                className={
+                  (task.done && "disabled")
+                }
+              >
                 {task.name}
                 {task.done && <span> (Done)</span>}
               </span>
