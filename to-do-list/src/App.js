@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import {v4 as uuidv4} from 'uuid';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCheck, faTrash, faArrowRotateRight, faPlus } from "@fortawesome/free-solid-svg-icons"
+import FilterTask from "./components/FilterTask"
+import AddTask from "./components/AddTask";
+import Task from "./components/Task";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -85,38 +86,18 @@ function App() {
       </div>
       <div className="row mb-5">
         <div className="col-9">
-          <div className="input-group shadow">
-            <div className="form-floating">
-              <input 
-                name="newText" 
-                placeholder="Task description" 
-                className="form-control" 
-                type="text" 
-                value={newTask} 
-                onChange={(event) => setNewTask(event.target.value)} 
-                onKeyPress={(event) => handleKeyPress(event)}
-              />
-              <label htmlFor="newText">Task description</label>
-            </div>
-            <button 
-              className="btn btn-primary" 
-              onClick={() => handleAddTask()}
-              disabled={!newTask.length && true }
-              title="Add"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-          </div>
+          <AddTask
+            newTask={newTask}
+            setNewTask={setNewTask}
+            handleKeyPress={handleKeyPress}
+            handleAddTask={handleAddTask}
+          />
         </div>
         <div className="col-3">
-          <div className="form-floating shadow">
-            <select name="filterTask" className="form-select" value={filterTask} onChange={(event) => setFilterTask(event.target.value)}>
-              <option value="All">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Done">Done</option>
-            </select>
-            <label htmlFor="filterTask">Filter tasks</label>
-          </div>
+          <FilterTask
+            filterTask={filterTask}
+            setFilterTask={setFilterTask}
+          />
         </div>
       </div>
       <ul className="w-75 ms-auto me-auto list-group">
@@ -129,43 +110,12 @@ function App() {
         }
         {
           tasks.filter(filterTasks).sort(sortTasks).map(task => (
-            <li 
-              className={
-                "list-group-item d-flex align-items-center shadow " + 
-                (task.done && "bg-secondary")
-              }
-              key={task.id}
-            >
-              <input
-                type="text"
-                className="form-control me-1"
-                disabled={task.done}
-                title={task.name}
-                value={task.name}
-                onChange={(event) => handleChangeTask(task.id, event.target.value)}
-              />
-              <button 
-                className={
-                  "btn ms-auto me-1 " + 
-                  (task.done ? "btn-primary" : "btn-success")
-                }
-                onClick={() => handleChangeCloseTask(task.id)}
-                title={
-                  (task.done ? "Return" : "Close")
-                }
-              >
-                {
-                  task.done ? <FontAwesomeIcon icon={faArrowRotateRight} /> : <FontAwesomeIcon icon={faCheck} />
-                }
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => handleRemoveTask(task.id)}
-                title="Exclude"
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </li>
+            <Task 
+              task={task}
+              handleChangeTask={handleChangeTask}
+              handleChangeCloseTask={handleChangeCloseTask}
+              handleRemoveTask={handleRemoveTask}
+            />
           ))
         }
       </ul>
