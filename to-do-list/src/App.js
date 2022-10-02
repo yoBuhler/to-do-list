@@ -23,8 +23,6 @@ function App() {
     }
   }
 
-  console.log('Renderizou')
-
   function handleChangeCloseTask(id) {
     const closeTasks = tasks.map(task => {
       return task.id === id ? { ...task, done: !task.done } : task
@@ -35,6 +33,12 @@ function App() {
 
   function handleRemoveTask(id) {
     setTasks(tasks.filter(task => task.id !== id))
+  }
+
+  function handleKeyPress(event) {
+    if (event.charCode === 13) {
+      handleAddTask();
+    }
   }
 
   function filterTasks(task) {
@@ -67,15 +71,23 @@ function App() {
   return (
     <div className="mt-3 mb-3 min-vh-75 align-items-center">
       <div className="row mb-3">
-        <h1 className="text-center">
+        <h1 className="text-center text-black text-shadow">
           Johan's to do list
         </h1>
       </div>
       <div className="row mb-5">
         <div className="col-9">
-          <div className="input-group">
+          <div className="input-group shadow">
             <div className="form-floating">
-              <input name="newText" placeholder="Task description" className="form-control" type="text" value={newTask} onChange={(event) => setNewTask(event.target.value)} />
+              <input 
+                name="newText" 
+                placeholder="Task description" 
+                className="form-control" 
+                type="text" 
+                value={newTask} 
+                onChange={(event) => setNewTask(event.target.value)} 
+                onKeyPress={(event) => handleKeyPress(event)}
+              />
               <label for="newText">Task description</label>
             </div>
             <button className="btn btn-primary" onClick={() => handleAddTask()}>
@@ -84,7 +96,7 @@ function App() {
           </div>
         </div>
         <div className="col-3">
-          <div className="form-floating">
+          <div className="form-floating shadow">
             <select name="filterTask" className="form-select" value={filterTask} onChange={(event) => setFilterTask(event.target.value)}>
               <option value="All">All</option>
               <option value="Pending">Pending</option>
@@ -99,17 +111,17 @@ function App() {
           tasks.filter(filterTasks).sort(sortTasks).map(task => (
             <li 
               className={
-                "list-group-item d-flex align-items-center"
+                "list-group-item d-flex align-items-center shadow " + 
+                (task.done && "bg-secondary")
               }
               key={task.id}
             >
               <span
                 className={
-                  (task.done && "disabled")
+                  (task.done && "text-decoration-line-through text-light")
                 }
               >
                 {task.name}
-                {task.done && <span> (Done)</span>}
               </span>
               <button 
                 className={
