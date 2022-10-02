@@ -23,6 +23,14 @@ function App() {
     }
   }
 
+  function handleChangeTask(id, name) {
+    const changeTasks = tasks.map(task => {
+      return task.id === id ? { ...task, name: name } : task
+    })
+
+    setTasks(changeTasks)
+  }
+
   function handleChangeCloseTask(id) {
     const closeTasks = tasks.map(task => {
       return task.id === id ? { ...task, done: !task.done } : task
@@ -88,9 +96,14 @@ function App() {
                 onChange={(event) => setNewTask(event.target.value)} 
                 onKeyPress={(event) => handleKeyPress(event)}
               />
-              <label for="newText">Task description</label>
+              <label htmlFor="newText">Task description</label>
             </div>
-            <button className="btn btn-primary" onClick={() => handleAddTask()}>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => handleAddTask()}
+              disabled={!newTask.length && true }
+              title="Add"
+            >
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
@@ -102,11 +115,18 @@ function App() {
               <option value="Pending">Pending</option>
               <option value="Done">Done</option>
             </select>
-            <label for="filterTask">Filter tasks</label>
+            <label htmlFor="filterTask">Filter tasks</label>
           </div>
         </div>
       </div>
       <ul className="w-75 ms-auto me-auto list-group">
+        {
+          (
+            !tasks.length && <li className="list-group-item d-flex align-items-center justify-content-center shadow">
+              Don't have items yet!
+            </li>
+          )
+        }
         {
           tasks.filter(filterTasks).sort(sortTasks).map(task => (
             <li 
@@ -116,19 +136,23 @@ function App() {
               }
               key={task.id}
             >
-              <span
-                className={
-                  (task.done && "text-decoration-line-through text-light")
-                }
-              >
-                {task.name}
-              </span>
+              <input
+                type="text"
+                className="form-control me-1"
+                disabled={task.done}
+                title={task.name}
+                value={task.name}
+                onChange={(event) => handleChangeTask(task.id, event.target.value)}
+              />
               <button 
                 className={
                   "btn ms-auto me-1 " + 
                   (task.done ? "btn-primary" : "btn-success")
                 }
                 onClick={() => handleChangeCloseTask(task.id)}
+                title={
+                  (task.done ? "Return" : "Close")
+                }
               >
                 {
                   task.done ? <FontAwesomeIcon icon={faArrowRotateRight} /> : <FontAwesomeIcon icon={faCheck} />
@@ -137,6 +161,7 @@ function App() {
               <button
                 className="btn btn-danger"
                 onClick={() => handleRemoveTask(task.id)}
+                title="Exclude"
               >
                 <FontAwesomeIcon icon={faTrash} />
               </button>
