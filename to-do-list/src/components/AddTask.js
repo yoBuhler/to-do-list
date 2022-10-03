@@ -3,6 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
 export default function AddTask(props) {
+    function handleKeyPress(event) {
+      // Function to add task when the key 'Enter'.
+      if (event.charCode === 13) {
+        props.handleAddTask();
+      }
+    }
+
     return (
         <div className="input-group shadow">
             <div className="form-floating">
@@ -13,7 +20,7 @@ export default function AddTask(props) {
                   type="text" 
                   value={props.newTask} 
                   onChange={(event) => props.setNewTask(event.target.value)} 
-                  onKeyPress={(event) => props.handleKeyPress(event)}
+                  onKeyPress={(event) => handleKeyPress(event)}
                 />
                 <label htmlFor="newText">Task description</label>
             </div>
